@@ -2,7 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const { ObjectId } = require('mongodb');
-const bcrypt = require('bcrypt')
+// const bcrypt = require('bcrypt')
 const MongoClient = require("mongodb").MongoClient;
 const dbname = "recipe-book";
 
@@ -11,8 +11,10 @@ require('dotenv').config();
 
 const mongoUri = process.env.MONGO_URI;
 
+// 1a. create the app
 let app = express();
 
+// 1b. enable JSON Processing
 // !! Enable processing JSON data
 app.use(express.json());
 
@@ -34,9 +36,9 @@ async function main() {
 const db = await connect(mongoUri, dbname);
 
   // Routes
-  app.get('/', function(req,res){
+  app.get('/', function (req,res){
     res.json({
-     "message":"Hello World!"
+    "message":"Hello World!"
    });
 });
 
@@ -74,7 +76,7 @@ app.get('/recipes', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-
+//create
 app.get("/recipes/:id", async (req, res) => {
     try {
         const id = req.params.id;
@@ -96,13 +98,14 @@ app.get("/recipes/:id", async (req, res) => {
     }
 });
 
+// Lab 4 Step 2, Add a POST /recipes route
 app.post('/recipes', async (req, res) => {
     try {
         const { name, cuisine, prepTime, cookTime, servings, ingredients, instructions, tags } = req.body;
 
         // Basic validation
         if (!name || !cuisine || !ingredients || !instructions || !tags) {
-            return res.status(400).json({ error: 'Missing required fields' });
+            return res.status(400).json({'error': 'Missing required fields' });
         }
 
         // Fetch the cuisine document
@@ -161,9 +164,9 @@ app.put('/recipes/:id', async (req, res) => {
 
         // Fetch the cuisine document
         const cuisineDoc = await db.collection('cuisines').findOne({ name: cuisine });
-        if (!cuisineDoc) {
-            return res.status(400).json({ error: 'Invalid cuisine' });
-        }
+        // if (!cuisineDoc) {
+        //     return res.status(400).json({ error: 'Invalid cuisine' });
+        // }
 
         // Fetch the tag documents
         const tagDocs = await db.collection('tags').find({ name: { $in: tags } }).toArray();
@@ -247,6 +250,6 @@ app.post('/users', async function (req, res) {
 main();
 
 // START SERVER
-app.listen(3000, () => {
+app.listen(3001, () => {
   console.log("Server has started");
 });
