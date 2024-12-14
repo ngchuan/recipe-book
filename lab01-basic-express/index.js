@@ -21,5 +21,6 @@ app.get('/hello/:name', (req,res)=>{
 
 app.listen(3000, ()=>{
     console.log("Server started")
+    console.log("Server 3000")
 })
 
